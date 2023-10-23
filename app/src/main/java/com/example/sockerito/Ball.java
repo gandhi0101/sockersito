@@ -3,91 +3,66 @@ package com.example.sockerito;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
-public class Ball extends View implements SensorEventListener {
-    private Sensor gyroscopeSensor;
-    private SensorManager sensorManager;
-    private float ballx = 1000;
-    private float bally = 450;
-    private float speedx = 0;
-    private float speedy = 0;
+
+// Clase Ball para representar la pelota
+public class Ball extends View {
+    private float ballX = 1000;
+    private float ballY = 450;
     private int colorRGB = 0xffff0000;
+    private Paint paint;
+
     public Ball(Context context) {
         super(context);
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(colorRGB);
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            float x = 10*((event.values[0]<0) ? -7: +7);
-            float y = -10* ((event.values[1]<0) ? -7: +7);
+    public void updatePosition(float x, float y) {
+        // Actualizar la posición de la pelota en función de los valores del giroscopio
+        ballX += x;
+        ballY += y;
+        //Toast.makeText(getContext(), "x: "+ballX+", y: "+ballY, Toast.LENGTH_SHORT).show();
+        // Realizar detección y ajuste de colisiones aquí si es necesario
 
-            // Actualizar la velocidad de la pelota
-            speedx += x ; // Ajusta el factor de velocidad según tu preferencia
-            speedy += y ;
-
-
-            // Mover la pelota en función de la velocidad
-            ballx += speedx;
-            bally += speedy;
-
-            // Limitar la posición de la pelota dentro de la vista
-            int maxX = getWidth()-50;
-            int maxY = getHeight()-50;
-
-            if (ballx < 50) {
-                ballx = 50;
-            } else if (ballx > maxX) {
-                ballx = maxX;
-            }
-
-            if (bally < 50) {
-                bally = 50;
-            } else if (bally > maxY) {
-                bally = maxY;
-            }
-
-            // Solicitar una actualización de la vista
-            invalidate();
-        }
+        // Solicitar una actualización de la vista
+        invalidate();
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        int radius = 50; // Tamaño del círculo, ajusta según tu preferencia
-
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(colorRGB); // Cambia el color como desees
-
-        canvas.drawCircle(ballx, bally, radius, paint);
-    }
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        int radius = 50;
+        canvas.drawCircle(ballX, ballY, radius, paint);
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        sensorManager.unregisterListener(this);
+    public float getBallX() {
+        return ballX;
+    }
+
+    public float getBallY() {
+        return ballY;
+    }
+
+    public float getRadius() {
+        return 50; // Tamaño del círculo
+    }
+
+    public void tope(boolean b,float valor) {// si es true es x de lo contratio es y
+
+        if (b) {
+            ballX = valor;
+
+        } else {
+            ballY = valor;
+        }
+        invalidate();
+
     }
 }
+
+
