@@ -42,7 +42,9 @@ public class GyroscopeManager implements SensorEventListener {
 //            float y = -10 * ((event.values[1] < 0) ? -7 : 7);
             int x = (int)event.values[1];
             int y = (int)event.values[0];
-
+            if (collisionManager.checkCollisions()) {
+                //stopListening();
+            }
 //            if(collisionManager.checkCollisions()){
 //                onPause();
 //            }

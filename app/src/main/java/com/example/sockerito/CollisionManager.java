@@ -8,35 +8,42 @@ import android.widget.Toast;
 
 // Clase CollisionManager para manejar las colisiones (implementa lógica según tus necesidades)
 public class CollisionManager {
+    private final int maxX;
+    private final int maxY;
     private Ball ball;
     DisplayMetrics displayMetrics;
+
     public CollisionManager(Ball ball) {
         this.ball = ball;
         displayMetrics = new DisplayMetrics();
         //getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        maxX = 2300;
+        maxY = 975;
     }
 
     public boolean checkCollisions() {
-        // Lógica de detección y ajuste de colisiones
+        boolean collided = false;
+        //Toast.makeText(ball.getContext(), maxX+",  "+maxY, Toast.LENGTH_SHORT).show();
 
-        int maxX = displayMetrics.widthPixels ;
-        int maxY =  displayMetrics.heightPixels  ;
-
-
-        if (ball.getBallX() < 50) {
-            ball.tope(true, 50);
-            return true;
-        } else if (ball.getBallX() > maxX-50) {
-            ball.tope(true, maxX);
-            return true;
+        if (ball.getBallX() < (ball.getRadius() + 100)) {
+            ball.tope(true, (ball.getRadius() + 100));
+            collided = true;
         }
-        if (ball.getBallY() < 50) {
-            ball.tope(false, 50);
-            return true;
-        } else if (ball.getBallY() > maxY-50) {
-            ball.tope(false, maxY);
-            return true;
+
+        if (ball.getBallX() > maxX - (ball.getRadius() + 100)) {
+            ball.tope(true, maxX - (ball.getRadius() + 100));
+            collided = true;
         }
-        return false;
+        if (ball.getBallY() < ball.getRadius()) {
+            ball.tope(false, ball.getRadius());
+            collided = true;
+        }
+        if (ball.getBallY() > maxY - ball.getRadius()) {
+            ball.tope(false, maxY - ball.getRadius());
+            collided = true;
+        }
+
+        return collided;
     }
 }

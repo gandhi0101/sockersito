@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private CollisionManager collisionManager;
     Button play;
     private TextView coordinates;
+    Porteria porteria2, porteria1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,13 @@ public class MainActivity extends AppCompatActivity {
         play.setVisibility(View.GONE);
 
         ball = new Ball(this);
+        porteria1 = new Porteria(this, 0,300,100,600 );
+        porteria2 = new Porteria(this, 2200,300,2310,600 );
+
         RelativeLayout relativeLayoutball = findViewById(R.id.mainActiviity);
         relativeLayoutball.addView(ball);
+        relativeLayoutball.addView(porteria1);
+        relativeLayoutball.addView(porteria2);
 
         gyroscopeManager = new GyroscopeManager(this, ball);
 
